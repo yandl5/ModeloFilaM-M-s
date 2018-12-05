@@ -30,15 +30,13 @@ def tempoMedioFila(nGuiches,aHoraGuiche,tClientesHora):
     tempoMedio=(probabilidadeOcupacao(nGuiches,tUtilizacao)/(1-tUtilizacao))*tUtilizacao
     return tempoMedio
 # %% dados base bancos cidade A
-numeroGuichesBancos = 8
 atendimentoHoraGuiche = 20
 taxaClientesHora = 70
-
 # %% Cidades
-cidadeA = 803739
-cidadeB = 202456
-cidadeC = 76801
-cidadeD = 23704
+cidadeA = 903739
+cidadeB = 302456
+cidadeC = 96801
+cidadeD = 53704
 cidadeE = 43191
 #estipular o fenômeno da migração pendular de 10% dos munícipios para A
 #durante o periodo de 8:00 até 16:00, somando 8 horas, logo teremos o centro da
@@ -48,11 +46,24 @@ centroMetropole=(cidadeA*0.9)+(cidadeB*0.1)+(cidadeC*0.1)+(cidadeD*0.1)+(cidadeE
 centroMetropoleDia = [0]*40
 for i in range(0,40):
     centroMetropoleDia[i] = np.random.randint((centroMetropole*0.00008),(centroMetropole*0.00014))
-# %% bancos da metrópole
-numeroGuiches = [8]*5
+#escolha a quantidade de guiches
+#%% 6 guiches
+numeroGuichesBancos = 6
+#%% 7 guiches
+numeroGuichesBancos = 7
+#%% 8 guiches
+numeroGuichesBancos = 8
+#%% 9 guiches
+numeroGuichesBancos = 9
+#%% 10 guiches
+numeroGuichesBancos = 10
+# %% 11 guiches
+numeroGuichesBancos = 11
+# %% 12 guiches
+numeroGuichesBancos = 12
 # %% Media Hora na cidade 
 MediaDia = [0]*8
-# %%
+# %% Media hora
 contadorDia = [0]*40
 for i in range(0,40):
     contadorDia[i]=tempoMedioFila(numeroGuichesBancos,atendimentoHoraGuiche,centroMetropoleDia[i])
@@ -89,4 +100,18 @@ bar_color = 'black'
 
 plt.bar(x_axis, y_axis, width=width_n, color=bar_color)
 plt.show() 
+# %% custo médio dos 8 dias
+contCustos = 0
+for i in range(0,8):
+    contCustos = contCustos + vetorCusto[i]
+contCustos = contCustos/8
+print(contCustos)
+# %% Gráfico guichês
+guichesCusto = [44.80,10.77,8.47,4.76,5.09,5.53,6.01]
+y_axis = guichesCusto
+x_axis = range(len(y_axis))
+width_n = 0.4
+bar_color = 'black'
 
+plt.bar(x_axis, y_axis, width=width_n, color=bar_color)
+plt.show() 
