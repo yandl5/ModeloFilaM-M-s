@@ -26,10 +26,11 @@ def probabilidadeOcupacao(nGuiches,tUtilizacao):
 # %% tempo médio de fila
 def tempoMedioFila(nGuiches,aHoraGuiche,tClientesHora):
     tUtilizacao=taxaUtilizacaoSistema(nGuiches,tClientesHora,aHoraGuiche)
+    print(tUtilizacao)
     tempoMedio=(probabilidadeOcupacao(nGuiches,tUtilizacao)/(1-tUtilizacao))*tUtilizacao
     return tempoMedio
 # %% dados base bancos cidade A
-numeroGuichesBancos = 4
+numeroGuichesBancos = 8
 atendimentoHoraGuiche = 20
 taxaClientesHora = 70
 
@@ -44,35 +45,48 @@ cidadeE = 43191
 #metrópole com o total de habitantes nesse dado período de:
 # %% centro da metrópole
 centroMetropole=(cidadeA*0.9)+(cidadeB*0.1)+(cidadeC*0.1)+(cidadeD*0.1)+(cidadeE*0.1)
-centroMetropoleHora = [0]*8
-for i in range(0,8):
-    centroMetropoleHora[i] = np.random.randint(centroMetropole*0.0004,centroMetropole*0.0007)
-#print (centroMetropoleHora)
+centroMetropoleDia = [0]*40
+for i in range(0,40):
+    centroMetropoleDia[i] = np.random.randint((centroMetropole*0.00008),(centroMetropole*0.00014))
 # %% bancos da metrópole
 numeroGuiches = [8]*5
 # %% Media Hora na cidade 
-MediaHora = [0]*8
+MediaDia = [0]*8
 # %%
-
+contadorDia = [0]*40
+for i in range(0,40):
+    contadorDia[i]=tempoMedioFila(numeroGuichesBancos,atendimentoHoraGuiche,centroMetropoleDia[i])
+j = 0
 for i in range(0,8):
-    for j in range(0,5):
-        MediaHora[i]=MediaHora[i]+tempoMedioFila(numeroGuiches[j],atendimentoHoraGuiche,(centroMetropoleHora[i]/5))
-       # print(MediaHora[i])
+    MediaDia[i]=contadorDia[j]+contadorDia[j+1]+contadorDia[j+2]+contadorDia[j+3]+contadorDia[j+4]
+    j=j+5
 for i in range(0,8): 
-    MediaHora[i]=MediaHora[i]/5*60
-# %% Criar matriz horas por dia
-matrizA = np.zeros((8,2),int)
+    MediaDia[i]=MediaDia[i]/5*60
+# %% Dados referentes ao custo em hora
+custoGuicheHora = 0.50
+custoClienteHora = 2.00
+taxaEsperaCliente = 5.00
+vetorCusto = np.zeros(8)
 for i in range(0,8):
-    matrizA[i][0]=MediaHora[i]
-    matrizA[i][1]=i+1
-# %% Gerar gráficos
+    if MediaDia[i]<=15 :
+        vetorCusto[i] = custoGuicheHora*numeroGuichesBancos + custoClienteHora*(MediaDia[i]/60)
+    else:
+        vetorCusto[i] = custoGuicheHora*numeroGuichesBancos + custoClienteHora*(MediaDia[i]/60)+taxaEsperaCliente
+# %% Gerar gráficos média dia
 import matplotlib.pyplot as plt
-y_axis = MediaHora
+y_axis = MediaDia
 x_axis = range(len(y_axis))
 width_n = 0.4
 bar_color = 'black'
 
 plt.bar(x_axis, y_axis, width=width_n, color=bar_color)
 plt.show()
-    
+# %% Gerar gráfico custo
+y_axis = vetorCusto
+x_axis = range(len(y_axis))
+width_n = 0.4
+bar_color = 'black'
+
+plt.bar(x_axis, y_axis, width=width_n, color=bar_color)
+plt.show() 
 
